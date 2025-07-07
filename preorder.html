@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>WAVO Checkout - Make Order</title>
+  <style>
+    @font-face {
+      font-family: 'ZenDots';
+      src: url('ZenDots-Regular.ttf') format('truetype');
+    }
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'ZenDots', sans-serif;
+      background: #f5f5f5;
+      color: #333;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+    .stage {
+      display: none;
+      background: #fff;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+    }
+    .stage.active {
+      display: block;
+    }
+    h2 {
+      font-size: 24px;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    label {
+      display: block;
+      margin: 10px 0 5px;
+    }
+    select, 
+    input[type="text"], 
+    input[type="email"], 
+    input[type="number"], 
+    input[type="file"],
+    textarea {
+      width: 100%;
+      padding: 10px;
+      font-family: 'ZenDots', sans-serif;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      margin-bottom: 15px;
+      box-sizing: border-box;
+      font-size: 16px;
+    }
+    select {
+      appearance: none;
+      background: #fff url("data:image/svg+xml;utf8,<svg fill='black' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>") no-repeat right 10px center;
+      background-size: 16px;
+      padding-right: 40px;
+    }
+    .button {
+      background-color: #c84b4b;
+      color: #fff;
+      text-decoration: none;
+      padding: 12px 24px;
+      font-size: 16px;
+      border-radius: 4px;
+      display: block;
+      cursor: pointer;
+      text-align: center;
+      margin: 8px 0;
+    }
+    .button:hover {
+      background-color: #a63a3a;
+    }
+    .slideshow-container {
+      position: relative;
+      overflow: hidden;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+    .slides {
+      display: flex;
+      transition: transform 0.5s ease-in-out;
+    }
+    .slides img {
+      width: 100%;
+      object-fit: cover;
+      aspect-ratio: 1/1;
+      flex-shrink: 0;
+    }
+    .arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(0,0,0,0.4);
+      color: #fff;
+      font-size: 24px;
+      padding: 6px 10px;
+      cursor: pointer;
+      border-radius: 4px;
+      user-select: none;
+    }
+    .arrow.left { left: 10px; }
+    .arrow.right { right: 10px; }
+    .summary {
+      font-size: 18px;
+      margin: 15px 0;
+    }
+    @media (max-width: 600px) {
+      h2 { font-size: 20px; }
+      .button { width: 100%; }
+      select, input, textarea { font-size: 16px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Stage 1 -->
+    <div class="stage active" id="stage1">
+      <h2>Select Item</h2>
+      <div class="slideshow-container">
+        <div class="slides" id="slides">
+          <img src="img/product/wavo_le_00.png" alt="">
+          <img src="img/product/wavo_le_01.png" alt="">
+          <img src="img/product/wavo_le_02.png" alt="">
+          <img src="img/product/wavo_le_03.png" alt="">
+          <img src="img/product/wavo_le_04.png" alt="">
+          <img src="img/product/wavo_le_05.png" alt="">
+          <img src="img/product/wavo_le_06.png" alt="">
+          <img src="img/product/wavo_le_07.png" alt="">
+          <img src="img/product/Size Chart.png" alt="">
+        </div>
+        <div class="arrow left" id="prev">&#10094;</div>
+        <div class="arrow right" id="next">&#10095;</div>
+      </div>
+      <label>Color</label>
+      <select id="colorSelect">
+        <option value="black">Black</option>
+        <option value="white">White</option>
+        <option value="both">Both</option>
+      </select>
+      <label>Size</label>
+      <select id="sizeSelect">
+        <option value="S">S</option>
+        <option value="M">M</option>
+        <option value="L">L</option>
+        <option value="XL">XL</option>
+        <option value="2XL">2XL</option>
+      </select>
+      <label>Quantity</label>
+      <input type="number" id="quantityInput" value="1" min="1">
+      <div class="summary">Total Items: <span id="totalItems">1</span></div>
+      <a class="button" onclick="nextStage(2)">Next</a>
+    </div>
+
+    <!-- Stage 2 -->
+    <div class="stage" id="stage2">
+      <h2>Customer Data</h2>
+      <label>Name *</label>
+      <input type="text" id="nameInput">
+      <label>Email *</label>
+      <input type="email" id="emailInput">
+      <label>Phone Number *</label>
+      <input type="text" id="phoneInput">
+      <label>Province *</label>
+      <select id="provinceSelect">
+        <option value="">Select Province</option>
+        <option value="Western">Western</option>
+        <option value="Central">Central</option>
+        <option value="Southern">Southern</option>
+        <option value="Northern">Northern</option>
+        <option value="Eastern">Eastern</option>
+        <option value="North Western">North Western</option>
+        <option value="North Central">North Central</option>
+        <option value="Uva">Uva</option>
+        <option value="Sabaragamuwa">Sabaragamuwa</option>
+      </select>
+      <label>City *</label>
+      <input type="text" id="cityInput">
+      <label>Address *</label>
+      <textarea id="addressInput" rows="3"></textarea>
+      <a class="button" onclick="nextStage(1)">Back</a>
+      <a class="button" onclick="nextStage(3)">Next</a>
+    </div>
+
+    <!-- Stage 3 -->
+    <div class="stage" id="stage3">
+      <h2>Payment</h2>
+      <p>Transfer the amount to the bank below and upload your payment proof.</p>
+      <div class="summary">
+        <strong>Bank Details:</strong><br>
+        Bank: BOC<br>
+        Account: 85044011<br>
+        Name: WAVO CLOTHING (PVT) LTD
+      </div>
+      <div class="summary" id="totalAmount"></div>
+      <label>Upload Payment Proof</label>
+      <input type="file" id="paymentFile">
+      <p>Or send via WhatsApp</p>
+      <a href="https://wa.me/94765358085" target="_blank" class="button">Send via WhatsApp</a>
+      <a class="button" onclick="nextStage(2)">Back</a>
+      <a class="button" onclick="submitOrder()">Submit Payment</a>
+    </div>
+
+    <!-- Stage 4 -->
+    <div class="stage" id="stage4">
+      <h2>Order Placed!</h2>
+      <p>Your order ID is <strong id="orderIdSpan"></strong>.</p>
+      <div id="orderDetails"></div>
+      <a href="#" class="button" onclick="generatePDF()">Download Receipt PDF</a>
+      <a href="#" class="button" onclick="nextStage(1)">Place New Order</a>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+  <!-- Firebase + JS -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
+    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyA0tmZHOyq2SpEjp3b3vekn1UUhKX11w24",
+      authDomain: "wavo-clothing.firebaseapp.com",
+      projectId: "wavo-clothing",
+      storageBucket: "wavo-clothing.firebasestorage.app",
+      messagingSenderId: "240033271346",
+      appId: "1:240033271346:web:646ee785d2be8d5782762b"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    let lastOrder = {};
+
+    window.submitOrder = async function() {
+      const quantity = parseInt(document.getElementById('quantityInput').value);
+      const count = document.getElementById('colorSelect').value === 'both' ? 2 : 1;
+      const totalAmount = quantity * count * 3490;
+
+      // Normalize phone number
+      function formatPhoneNumber(raw) {
+          const clean = raw.replace(/[^0-9]/g, '');
+          if (clean.startsWith('0')) {
+              return '94' + clean.substring(1);
+          }
+          if (clean.startsWith('94')) {
+              return clean;
+          }
+          return clean; // fallback, if user already inputs correct format
+      }
+
+      const order = {
+          color: document.getElementById('colorSelect').value,
+          size: document.getElementById('sizeSelect').value,
+          quantity: quantity,
+          amount: totalAmount,
+          name: document.getElementById('nameInput').value,
+          email: document.getElementById('emailInput').value,
+          phone: formatPhoneNumber(document.getElementById('phoneInput').value),
+          province: document.getElementById('provinceSelect').value,
+          city: document.getElementById('cityInput').value,
+          address: document.getElementById('addressInput').value,
+          createdAt: new Date().toISOString()
+      };
+
+      try {
+          const docRef = await addDoc(collection(db, "orders"), order);
+          const orderId = docRef.id.substring(0,8).toUpperCase();
+          document.getElementById('orderIdSpan').textContent = "#" + orderId;
+          lastOrder = { ...order, id: orderId };
+
+          const detailHTML = `
+          <p><strong>Color:</strong> ${order.color}</p>
+          <p><strong>Size:</strong> ${order.size}</p>
+          <p><strong>Quantity:</strong> ${order.quantity}</p>
+          <p><strong>Total Amount:</strong> Rs. ${order.amount.toLocaleString()}/-</p>
+          <p><strong>Name:</strong> ${order.name}</p>
+          <p><strong>Phone:</strong> ${order.phone}</p>
+          <p><strong>Address:</strong> ${order.address}, ${order.city}, ${order.province}</p>
+          `;
+          document.getElementById('orderDetails').innerHTML = detailHTML;
+
+          // Send SMS with amount
+          const smsMessage = `Hi ${order.name}, your order #${orderId} has been placed.\n${order.quantity} x ${order.size} ${order.color}\nTotal: Rs. ${order.amount}/-\nThank you for shopping with WAVO.`;
+
+          await fetch("https://sms.send.lk/api/v3/sms/send", {
+              method: "POST",
+              headers: {
+                  "Authorization": "Bearer 2712|bOgTlR4WTUmi4amTcOFwcbnI691vhPCJIdAAquPd",
+                  "Content-Type": "application/json"
+              },
+              body: JSON.stringify({
+                  recipient: order.phone,
+                  sender_id: "WAVO Promo",
+                  message: smsMessage
+              })
+          });
+
+          nextStage(4);
+      } catch (e) {
+          alert("Error saving order: " + e);
+      }
+   };
+
+    window.generatePDF = function() {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+      doc.text("WAVO Order Receipt", 10, 10);
+      doc.text(`Order ID: #${lastOrder.id}`, 10, 20);
+      doc.text(`Name: ${lastOrder.name}`, 10, 30);
+      doc.text(`Phone: ${lastOrder.phone}`, 10, 40);
+      doc.text(`Color: ${lastOrder.color}`, 10, 50);
+      doc.text(`Size: ${lastOrder.size}`, 10, 60);
+      doc.text(`Quantity: ${lastOrder.quantity}`, 10, 70);
+      doc.text(`Address: ${lastOrder.address}, ${lastOrder.city}, ${lastOrder.province}`, 10, 80);
+      doc.save(`Order_${lastOrder.id}.pdf`);
+    };
+
+    // Slideshow + stages same as before
+    const slidesContainer = document.getElementById('slides');
+    const images = slidesContainer.querySelectorAll('img');
+    let index = 0;
+    let interval = setInterval(nextSlide, 3000);
+    function showSlide(i) {
+      index = (i + images.length) % images.length;
+      slidesContainer.style.transform = `translateX(-${index * 100}%)`;
+    }
+    function nextSlide() { showSlide(index + 1); }
+    function prevSlide() { showSlide(index - 1); }
+    document.getElementById('next').addEventListener('click', () => { nextSlide(); resetInterval(); });
+    document.getElementById('prev').addEventListener('click', () => { prevSlide(); resetInterval(); });
+    function resetInterval() {
+      clearInterval(interval);
+      interval = setInterval(nextSlide, 3000);
+    }
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight') { nextSlide(); resetInterval(); }
+      if (e.key === 'ArrowLeft') { prevSlide(); resetInterval(); }
+    });
+    
+    const colorSelect = document.getElementById('colorSelect');
+    const quantityInput = document.getElementById('quantityInput');
+    const totalItems = document.getElementById('totalItems');
+    function updateTotal() {
+      let count = colorSelect.value === 'both' ? 2 : 1;
+      totalItems.textContent = count * (parseInt(quantityInput.value) || 1);
+    }
+    function updatePaymentTotal() {
+      let count = colorSelect.value === 'both' ? 2 : 1;
+      let qty = parseInt(quantityInput.value) || 1;
+      let total = count * qty * 3490;
+      document.getElementById('totalAmount').innerHTML = `<strong>Total Amount:</strong> Rs. ${total.toLocaleString()}/-`;
+    }
+    colorSelect.addEventListener('change', updateTotal);
+    quantityInput.addEventListener('input', updateTotal);
+    window.nextStage = function(stage) {
+      document.querySelectorAll('.stage').forEach(s => s.classList.remove('active'));
+      document.getElementById('stage' + stage).classList.add('active');
+      if(stage===3) updatePaymentTotal();
+    };
+  </script>
+</body>
+</html>
